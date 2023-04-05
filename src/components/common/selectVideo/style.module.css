@@ -1,0 +1,48 @@
+.select_item {
+  border: 0.5px solid #a1a1a194;
+  padding: 2vh;
+  overflow: hidden;
+  transition: all 0.5s;
+  background-color: #060a14;
+  position: fixed;
+  z-index: 1;
+  width: 94.4%;
+}
+
+.min-hight {
+  min-height: 20rem;
+}
+
+.select {
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+}
+.item_list {
+  list-style: none;
+  margin-top: 1vh;
+  max-height: 25vh;
+  display: block;
+}
+.item_list li {
+  padding: 10px;
+  border-bottom: 0.2px solid #1e293b;
+  cursor: pointer;
+}
+.item_list li:hover {
+  background-color: #1e293b;
+}
+
+/* width */
+.item_list::-webkit-scrollbar {
+  width: 10px;
+}
+/* Handle */
+.item_list::-webkit-scrollbar-thumb {
+  background: #8c98ad;
+}
+
+/* Handle on hover */
+.item_list::-webkit-scrollbar-thumb:hover {
+  background: #000;
+}
