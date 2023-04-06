@@ -4,7 +4,7 @@ import Input from "../../common/Input";
 import SelectVideo from "../../common/selectVideo/SelectVideo";
 import { useEffect } from "react";
 import Button from "../../common/Button";
-import AddOption from "../../common/addoption/AddOption";
+import CopyAddOption from "../../common/addoption/AddOption";
 import Messages from "../../common/message";
 import validateQuiz from "../../../utils/validateQuiz";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -23,6 +23,8 @@ const AddQuiz = () => {
   const [addedQuizOption, setAddedQuizOption] = useState([]);
   const [clearOptionData, setClearOption] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
   const navigate = useNavigate();
 
   const [inputValue, setInputValue] = useState(initialState);
@@ -76,9 +78,7 @@ const AddQuiz = () => {
   };
 
   useEffect(() => {
-    if (addedQuizOption?.length !== 0) {
-      setInputValue({ ...inputValue, options: [...addedQuizOption] });
-    }
+    setInputValue({ ...inputValue, options: [...addedQuizOption] });
     setClearOption(false);
   }, [addedQuizOption]);
 
@@ -86,12 +86,16 @@ const AddQuiz = () => {
     e.preventDefault();
     const isError = validateQuiz(inputValue);
     setError(isError);
+    if (isError) {
+      setSuccess("");
+    }
     if (!isError) {
       setInputValue(initialState);
       setSelectedVideo({});
       setClearSelectVideo(true);
       setClearOption(true);
       setError("");
+      setSuccess("Update Successfully Quiz");
       console.log(inputValue);
     }
   };
@@ -110,6 +114,7 @@ const AddQuiz = () => {
           height="720px"
           top="10%">
           {error && <Messages cls="danger fixed" message={error} />}
+          {success && <Messages cls="success fixed" message={success} />}
           <h1 className="text-2xl text-bold  ">
             <span className="primary-highlighter">Quiz</span> Create
           </h1>
@@ -135,7 +140,7 @@ const AddQuiz = () => {
             <h1 className=" text-sm leading-[1.7142857] text-slate-400 mt-9">
               Add Options
             </h1>
-            <AddOption
+            <CopyAddOption
               limit="4"
               optionsFun={optionData}
               clearOption={clearOptionData}

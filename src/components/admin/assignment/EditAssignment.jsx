@@ -6,18 +6,18 @@ import { EditIcon } from "../../../constant/icon";
 import Input from "../../common/Input";
 
 const initialState = {
-  title: "",
-  video_id: null,
-  video_title: "",
+  title: "This is new ONe",
+  video_id: 1,
+  video_title: "This is new",
   totalMark: "100",
 };
 
 const EditAssignment = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [inputValue, setInputValue] = useState(initialState);
   const [selectVideo, setSelectVideo] = useState(null);
   const [disabled, setDisabled] = useState(true);
   const [clearSelect, setClearSelect] = useState(false);
+  const [inputValue, setInputValue] = useState(initialState);
 
   // handle Modal Open & Close
   const handleModalIsOpen = () => {
@@ -69,7 +69,11 @@ const EditAssignment = () => {
     <>
       <EditIcon onClick={handleModalIsOpen} />
       {modalIsOpen && (
-        <Modal closeFun={handleModalIsOpen} width="700px" height="500px">
+        <Modal
+          closeFun={handleModalIsOpen}
+          width="700px"
+          height="500px"
+          top="10%">
           <h1 className="text-2xl text-bold  ">
             <span className="primary-highlighter">Assignment</span> Update
           </h1>
@@ -90,6 +94,7 @@ const EditAssignment = () => {
             <SelectVideo
               selectedData={selectedData}
               clearSelect={clearSelect}
+              initialData={inputValue.video_title}
             />
             <h1 className=" text-sm leading-[1.7142857] text-slate-400 mt-9">
               Total Mark

@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Model from "../../common/modal/Model";
-import Assignment from "./Assigment";
+import Assignment from "./Assignment";
+import SubmitAssignment from "./SubmitAssignment";
+import dateFormatter from "../../../utils/dateFormatter";
 
 const VideoDescription = () => {
   const [isModelOpen, setIsModelOpen] = useState(false);
@@ -9,6 +11,7 @@ const VideoDescription = () => {
     setIsModelOpen((prv) => !prv);
   };
 
+  console.log(dateFormatter(new Date()));
   return (
     <div>
       <h1 className="text-lg font-semibold tracking-tight text-slate-100">
@@ -42,19 +45,12 @@ const VideoDescription = () => {
       </p>
       <Assignment />
       {isModelOpen && (
-        <Model closeFun={handleModelIsOpen} maxWidth="700px">
-          <h1 className="text-2xl text-bold pb-4 ">
-            <span className="primary-highlighter">এসাইনমেন্ট</span> জমা দিন
-          </h1>
-          <p className="pb-4 text-sm leading-[1.7142857] text-slate-400">
-            গিটহাব রিপোসিটরি লিঙ্ক *
-          </p>
-          <form>
-            <input required className="login-input rounded-md" />
-            <button className="px-4 py-2 rounded-full text-bold bg-cyan block ml-auto mt-8 hover:opacity-90 active:opacity-100 active:scale-95">
-              এসাইনমেন্ট জমা দিন
-            </button>
-          </form>
+        <Model
+          closeFun={handleModelIsOpen}
+          width="600px"
+          height="400px"
+          top="20%">
+          <SubmitAssignment />
         </Model>
       )}
     </div>

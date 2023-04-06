@@ -1,84 +1,120 @@
 import { useEffect, useState } from "react";
 import InputCheck from "../checkbox";
+import Input from "../Input";
+import { DeleteIcon } from "../../../constant/icon";
 
 /**
  * @param {Number} limit // Limit of Option
  * @param {function} optionsFun  // Provide function ,then this function return option value
+ * @param {function} initialData  initialData Options data If any previous information will be added
  * @returns JSX & option value JSON
  */
 
-const AddOption = ({ limit, optionsFun = () => {}, clearOption = false }) => {
+const copyAddOption = ({
+  limit,
+  optionsFun = () => {},
+  clearOption = false,
+  initialData = [],
+}) => {
   const [addOption, setAddOption] = useState(0);
+  const [initialInputValue, setInitialInputValue] = useState([]);
   const [inputValue, setInputValue] = useState([]);
 
+  /// load initialData  previous information
+  useEffect(() => {
+    setAddOption(initialData?.length || 0);
+    setInitialInputValue(initialData || []);
+  }, []);
+
+  // Clear value
   useEffect(() => {
     if (clearOption) {
       setAddOption(0);
       setInputValue([]);
+      setInitialInputValue([]);
+      console.log("clearOption");
     }
   }, [clearOption]);
 
+  // send data
   useEffect(() => {
-    optionsFun(inputValue);
-  }, [inputValue]);
+    if (!(inputValue?.length === 0)) {
+      optionsFun(inputValue);
+    } else {
+      optionsFun(initialInputValue);
+    }
+  }, [inputValue, initialInputValue]);
 
   // Handle Options
   const incrementAddOption = () => {
     setAddOption((prv) => prv + 1);
-    setInputValue([
-      ...inputValue,
-      { id: addOption, option: "", isCorrect: false },
+    const id = Math.random().toString(36).substring(2, 9);
+    setInitialInputValue([
+      ...initialInputValue,
+      { id: id, option: "", isCorrect: false },
     ]);
   };
 
   const handleChange = ({ value, id, name }) => {
-    const indexNum = inputValue.findIndex((item) => item.id === id);
-    let oldData = inputValue[indexNum];
+    const indexNum = initialInputValue.findIndex((item) => item.id === id);
+    let oldData = initialInputValue[indexNum];
     if (name == "option") {
       oldData.option = value;
     } else {
       oldData.isCorrect = value;
     }
-    const updateData = (inputValue[indexNum] = oldData);
-    const notUpdate = inputValue?.filter((item) => item.id !== id);
+    const updateData = (initialInputValue[indexNum] = oldData);
+    const notUpdate = initialInputValue?.filter((item) => item.id !== id);
 
     setInputValue([...notUpdate, updateData]);
   };
 
+  // Delete option handle
   const deleteOption = (id) => {
-    setAddOption((prv = prv - 1));
-    const updateDate = inputValue.filter((item) => item.id !== i);
-    setInputValue(updateDate);
+    setAddOption((prv) => prv - 1);
+    const updateDate1 = inputValue.filter((item) => item.id != id);
+    const updateDate2 = initialInputValue.filter((item) => item.id != id);
+    setInputValue(updateDate1);
+    setInitialInputValue(updateDate2);
   };
 
   // what render decided
+
   const Options = () => {
-    return Array.from({ length: addOption }, (_, i) => (
-      <div key={i} className="flex gap-4  mt-4">
-        <input
-          type="text "
-          className="login-input"
-          name="option"
-          style={{ width: "88%" }}
-          onChange={(e) =>
-            handleChange({ value: e.target.value, name: e.target.name, id: i })
-          }
-        />
-        <InputCheck
-          cls="py-1"
-          label="True"
-          name="isCorrect"
-          id={i}
-          onChange={(e) =>
-            handleChange({
-              value: e.target.checked,
-              name: e.target.name,
-              id: i,
-            })
-          }
-        />
-      </div>
-    ));
+    return initialInputValue?.map((item) => {
+      return (
+        <div key={item.id} className="flex gap-4  mt-4">
+          <Input
+            value={item.option}
+            name="option"
+            style={{ width: "85%" }}
+            onChange={(e) =>
+              handleChange({
+                value: e.target.value,
+                name: e.target.name,
+                id: item.id,
+              })
+            }
+          />
+          <InputCheck
+            cls="py-1"
+            label="True"
+            name="isCorrect"
+            id={item.id}
+            checked={item.isCorrect}
+            onChange={(e) =>
+              handleChange({
+                value: e.target.checked,
+                name: e.target.name,
+                id: item.id,
+              })
+            }
+          />
+
+          <DeleteIcon type="button" onClick={() => deleteOption(item.id)} />
+        </div>
+      );
+    });
   };
 
   return (
@@ -96,4 +132,4 @@ const AddOption = ({ limit, optionsFun = () => {}, clearOption = false }) => {
   );
 };
 
-export default AddOption;
+export default copyAddOption;

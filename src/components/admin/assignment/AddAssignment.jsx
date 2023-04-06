@@ -87,7 +87,11 @@ const AddAssignment = () => {
         </button>
       </div>
       {modalIsOpen && (
-        <Modal closeFun={handleModalIsOpen} width="700px" height="500px">
+        <Modal
+          closeFun={handleModalIsOpen}
+          width="700px"
+          height="500px"
+          top="10%">
           <h1 className="text-2xl text-bold  ">
             <span className="primary-highlighter">Assignment</span> Create
           </h1>

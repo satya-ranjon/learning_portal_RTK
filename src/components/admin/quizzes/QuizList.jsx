@@ -16,6 +16,9 @@ const QuizList = () => {
         </thead>
         <Tbody>
           <Quiz />
+          <Quiz />
+          <Quiz />
+          <Quiz />
         </Tbody>
       </Table>
     </div>

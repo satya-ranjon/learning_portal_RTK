@@ -3,17 +3,34 @@ import { vidoes } from "./data";
 import { useEffect, useState } from "react";
 import { DownArrow, Loader } from "../../../constant/icon";
 
+/**
+ *
+ * @param {boolean} isLoading // boolean => true || false / If you want to show loading
+ * @param {function} selectedData // function provided & this function return selected value
+ * @param {boolean} clearSelect // clear the selected data
+ * @param {initialData} initialData // initialData Selected data
+ * @returns JSX & Selected JSON Value
+ */
+
 const SelectVideo = ({
   isLoading = false,
   selectedData,
   clearSelect = false,
+  initialData,
 }) => {
   const [videoSelect, setVideoSelect] = useState(false);
   const [selectedVideoTitle, setSelectedVideoTitle] = useState("");
-
+  //TODO:
   const handleVideoSelect = () => {
     setVideoSelect((prv) => !prv);
   };
+
+  // handle initial Data
+  useEffect(() => {
+    if (initialData) {
+      setSelectedVideoTitle(initialData);
+    }
+  }, []);
 
   // filter videos start
   const [filterVideo, setFilterVideo] = useState("");

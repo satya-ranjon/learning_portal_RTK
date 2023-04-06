@@ -48,7 +48,7 @@
 
 .success {
   border-left-color: #2b542c;
-  background-color: rgba(43, 84, 44, 0.1);
+  background-color: rgb(43 84 44 / 51%);
 }
 
 .success strong {

@@ -1,17 +1,153 @@
 import { useState } from "react";
 import Modal from "../../common/modal/Model";
+import Input from "../../common/Input";
+import SelectVideo from "../../common/selectVideo/SelectVideo";
+import { useEffect } from "react";
+import Button from "../../common/Button";
+import CopyAddOption from "../../common/addoption/AddOption";
+import Messages from "../../common/message";
+import validateQuiz from "../../../utils/validateQuiz";
+import { useLocation, useNavigate } from "react-router-dom";
 import { EditIcon } from "../../../constant/icon";
+
+const initialState = {
+  question: "This is new One So you don't mind",
+  video_id: 1,
+  video_title: "This is new",
+  options: [
+    {
+      id: "1",
+      option: "A function that is called after a certain time interval",
+      isCorrect: true,
+    },
+    {
+      id: "2",
+      option: "B function that is called after a certain time interval",
+      isCorrect: false,
+    },
+    {
+      id: 3,
+      option: "C function that is called after a certain time interval",
+      isCorrect: true,
+    },
+  ],
+};
 
 const EditQuiz = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [selectedVideo, setSelectedVideo] = useState({});
+  const [clearSelectVideoData, setClearSelectVideo] = useState(false);
+  const [addedQuizOption, setAddedQuizOption] = useState([]);
+  const [clearOptionData, setClearOption] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  const [inputValue, setInputValue] = useState(initialState);
+
   const handleModalIsOpen = () => {
     setModalIsOpen((prv) => !prv);
+    setInputValue(initialState);
+    setSelectedVideo({});
+    setAddedQuizOption([]);
+    // setClearSelectVideo(true);
+    // setClearOption(true);
   };
+
+  const handleInputValueChange = (e) => {
+    const { value, name } = e.target;
+    setInputValue({ ...inputValue, [name]: value });
+  };
+
+  // Handle Selected Video ID & Title
+  const selectedVideoData = (item) => {
+    setSelectedVideo(item);
+  };
+
+  useEffect(() => {
+    if (selectedVideo?.id && selectedVideo?.title) {
+      setInputValue({
+        ...inputValue,
+        video_id: selectedVideo?.id,
+        video_title: selectedVideo.title,
+      });
+    }
+    setClearSelectVideo(false);
+  }, [selectedVideo]);
+
+  // Handle Quiz Option
+  const optionData = (data) => {
+    setAddedQuizOption(data);
+  };
+
+  useEffect(() => {
+    setInputValue({ ...inputValue, options: [...addedQuizOption] });
+    setClearOption(false);
+  }, [addedQuizOption]);
+
+  const handleCreateQuiz = (e) => {
+    e.preventDefault();
+    const isError = validateQuiz(inputValue);
+    setError(isError);
+    if (isError) {
+      setSuccess("");
+    }
+    if (!isError) {
+      setInputValue(initialState);
+      setSelectedVideo({});
+      // setClearSelectVideo(true);
+      // setClearOption(true);
+      setError("");
+      setSuccess("Update Successfully Quiz");
+      console.log(inputValue);
+    }
+  };
+
   return (
     <>
       <EditIcon onClick={handleModalIsOpen} />
       {modalIsOpen && (
-        <Modal closeFun={handleModalIsOpen} maxWidth="700px"></Modal>
+        <Modal
+          closeFun={handleModalIsOpen}
+          width="900px"
+          height="720px"
+          top="10%">
+          {error && <Messages cls="danger fixed" message={error} />}
+          {success && <Messages cls="success fixed" message={success} />}
+          <h1 className="text-2xl text-bold  ">
+            <span className="primary-highlighter">Quiz</span> Create
+          </h1>
+          <form onSubmit={handleCreateQuiz}>
+            <h1 className=" mt-4 text-sm leading-[1.7142857] text-slate-400">
+              Question
+            </h1>
+            <Input
+              // required
+              cls="mt-4"
+              placeholder="Question"
+              name="question"
+              value={inputValue.question}
+              onChange={handleInputValueChange}
+            />
+            <h1 className="pb-4  mt-4 text-sm leading-[1.7142857] text-slate-400">
+              Select Video
+            </h1>
+            <SelectVideo
+              selectedData={selectedVideoData}
+              clearSelect={clearSelectVideoData}
+              initialData={inputValue.video_title}
+            />
+            <h1 className=" text-sm leading-[1.7142857] text-slate-400 mt-9">
+              Add Options
+            </h1>
+            <CopyAddOption
+              limit="4"
+              optionsFun={optionData}
+              clearOption={clearOptionData}
+              initialData={inputValue.options}
+            />
+            <Button cls="mt-8">Create Quiz</Button>
+          </form>
+        </Modal>
       )}
     </>
   );
